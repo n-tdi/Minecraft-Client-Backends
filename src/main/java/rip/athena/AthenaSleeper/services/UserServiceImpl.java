@@ -22,7 +22,7 @@ public class UserServiceImpl implements IUserService {
         List<UserEntity> userEntities = userRepository.findAll();
         List<User> users = userEntities.stream().map(
                 user -> new User(
-                        user.getUuid(), user.getUsername(), user.isOnline(), user.getCosmetics(), user.getPassphrase()))
+                        user.getUuid(), user.getUsername(), user.isOnline(), user.getRank(), user.getCosmetics(), user.getPassphrase()))
                 .toList();
 
         return users;
@@ -58,6 +58,7 @@ public class UserServiceImpl implements IUserService {
         UserEntity userEntity = userRepository.findById(uuid).get();
         userEntity.setUsername(user.getUsername());
         userEntity.setOnline(user.isOnline());
+        userEntity.setUsername(user.getUsername());
         userEntity.setCosmetics(user.getCosmetics());
         userEntity.setPassphrase(user.getPassphrase());
         userRepository.save(userEntity);
