@@ -17,5 +17,6 @@ public class User {
     private boolean online;
     private String rank;
     private List<Integer> cosmetics;
+    private List<UUID> friends;
     private UUID passphrase;
 }

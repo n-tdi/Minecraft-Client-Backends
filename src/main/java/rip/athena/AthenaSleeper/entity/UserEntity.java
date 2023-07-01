@@ -1,8 +1,6 @@
 package rip.athena.AthenaSleeper.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.List;
@@ -17,6 +15,13 @@ public class UserEntity {
     private String username;
     private boolean online;
     private String rank;
+    @ElementCollection(targetClass = Integer.class, fetch = FetchType.EAGER)
+    @CollectionTable(name = "cosmetics", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "cosmetic", nullable = false)
     private List<Integer> cosmetics;
+    @ElementCollection(targetClass = UUID.class, fetch = FetchType.EAGER)
+    @CollectionTable(name = "friends", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "friends", nullable = false)
+    private List<UUID> friends;
     private UUID passphrase;
 }
