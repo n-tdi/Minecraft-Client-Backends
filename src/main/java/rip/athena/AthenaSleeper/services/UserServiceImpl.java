@@ -22,7 +22,7 @@ public class UserServiceImpl implements IUserService {
         List<UserEntity> userEntities = userRepository.findAll();
         List<User> users = userEntities.stream().map(
                 user -> new User(
-                        user.getUuid(), user.getUsername(), user.isOnline(), user.getRank(), user.getCosmetics(), user.getPassphrase()))
+                        user.getUuid(), user.getUsername(), user.isOnline(), user.getRank(), user.getCosmetics(), user.getFriends(), user.getPassphrase()))
                 .toList();
 
         return users;
