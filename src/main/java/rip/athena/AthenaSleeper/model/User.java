@@ -18,5 +18,4 @@ public class User {
     private String rank;
     private List<Integer> cosmetics;
     private List<UUID> friends;
-    private UUID passphrase;
 }

@@ -26,5 +26,4 @@ public class UserEntity {
     @CollectionTable(name = "friends", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "friends", nullable = false)
     private List<UUID> friends;
-    private UUID passphrase;
 }
