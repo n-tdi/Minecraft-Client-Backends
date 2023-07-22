@@ -1,10 +1,10 @@
-package rip.athena.AthenaSleeper.services;
+package rip.athena.athenasleeper.services;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-import rip.athena.AthenaSleeper.entity.UserEntity;
-import rip.athena.AthenaSleeper.model.User;
-import rip.athena.AthenaSleeper.repository.UserRepository;
+import rip.athena.athenasleeper.entity.UserEntity;
+import rip.athena.athenasleeper.model.User;
+import rip.athena.athenasleeper.repository.UserRepository;
 
 import java.util.List;
 import java.util.UUID;

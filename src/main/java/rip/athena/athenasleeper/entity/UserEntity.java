@@ -1,4 +1,4 @@
-package rip.athena.AthenaSleeper.entity;
+package rip.athena.athenasleeper.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

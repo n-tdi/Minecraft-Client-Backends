@@ -1,6 +1,6 @@
-package rip.athena.AthenaSleeper.services;
+package rip.athena.athenasleeper.services;
 
-import rip.athena.AthenaSleeper.model.User;
+import rip.athena.athenasleeper.model.User;
 
 import java.util.List;
 import java.util.UUID;

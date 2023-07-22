@@ -1,4 +1,4 @@
-package rip.athena.AthenaSleeper.model;
+package rip.athena.athenasleeper.model;
 
 
 import lombok.AllArgsConstructor;

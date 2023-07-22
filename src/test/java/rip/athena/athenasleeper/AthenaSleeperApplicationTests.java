@@ -1,4 +1,4 @@
-package rip.athena.AthenaSleeper;
+package rip.athena.athenasleeper;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

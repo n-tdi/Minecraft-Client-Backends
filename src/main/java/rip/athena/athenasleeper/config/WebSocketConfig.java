@@ -1,4 +1,4 @@
-package rip.athena.AthenaSleeper.config;
+package rip.athena.athenasleeper.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;

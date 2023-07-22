@@ -1,11 +1,8 @@
-package rip.athena.AthenaSleeper;
+package rip.athena.athenasleeper;
 
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
-
-import java.security.GeneralSecurityException;
 
 @SuppressWarnings("all")
 @SpringBootApplication
