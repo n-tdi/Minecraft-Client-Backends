@@ -25,4 +25,7 @@ public class UserEntity implements Serializable {
     private boolean online;
     @Column(name = "Rank")
     private String rank;
+    @ManyToOne
+    @JoinColumn(name = "Equipped_Cosmetic")
+    private AvailableCosmeticEntity availableCosmeticEntity;
 }

@@ -20,8 +20,7 @@ import java.util.UUID;
 public class MasterKeyEntity implements Serializable {
     @Id
     @Column(name = "Key")
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID key;
+    private String key;
     @Basic(optional = false)
     @Column(name = "Creation_Date", insertable = false, updatable = false)
     @Temporal(TemporalType.DATE)
