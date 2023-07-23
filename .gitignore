@@ -29,3 +29,4 @@ target/*
 .env
 frontend/generated
 frontend/index.html
+src/main/dev-bundle
