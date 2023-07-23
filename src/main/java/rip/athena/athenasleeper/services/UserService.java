@@ -21,6 +21,7 @@ public interface UserService {
     AvailableCosmeticEntity getCosmetic(int p_id);
     void updateCosmetic(String p_uuid, AvailableCosmeticEntity p_availableCosmeticEntity);
     RankEntity getRank(String p_uuid);
+    void setRank(String p_uuid, RankEntity p_rankEntity);
     List<ActiveInfo> getActiveInformation();
     ActiveInfo getActiveInformation(UserEntity p_userEntity, String p_type);
 }

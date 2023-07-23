@@ -124,6 +124,13 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public void setRank(final String p_uuid, final RankEntity p_rankEntity) {
+        final UserEntity userEntity = m_userRepository.findById(p_uuid).orElseThrow();
+        userEntity.setRankEntity(p_rankEntity);
+        m_userRepository.save(userEntity);
+    }
+
+    @Override
     public List<ActiveInfo> getActiveInformation() {
         final List<ActiveInfo> activeInfoList = new ArrayList<>();
 
