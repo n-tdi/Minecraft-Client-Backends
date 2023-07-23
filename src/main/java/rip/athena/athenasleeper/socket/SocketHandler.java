@@ -10,6 +10,8 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import rip.athena.athenasleeper.AthenaSleeperApplication;
+import rip.athena.athenasleeper.model.ActiveInfo;
+import rip.athena.athenasleeper.model.UserSession;
 import rip.athena.athenasleeper.services.UserService;
 import rip.athena.athenasleeper.socket.sockets.JoinSubSocket;
 import rip.athena.athenasleeper.socket.sockets.SubSocket;
@@ -54,7 +56,13 @@ public class SocketHandler extends TextWebSocketHandler {
     public void afterConnectionClosed(final WebSocketSession session, final CloseStatus status) throws Exception {
         log.info("Connection lost from {}", session.getRemoteAddress().getAddress().getHostAddress());
 
-        m_userService.userLogOut(AthenaSleeperApplication.getUserWebSocketSessions().get(session.getId()));
+        UserSession userSession = AthenaSleeperApplication.getUserWebSocketSessions().get(session.getId());
+
+        m_userService.userLogOut(userSession);
+
+        final ActiveInfo activeInfo = new ActiveInfo("Remove", userSession.getUuid(), null, null);
+
+        userSession.broadcastToOthers(new Gson().toJson(activeInfo));
 
         AthenaSleeperApplication.remove(session.getId());
     }

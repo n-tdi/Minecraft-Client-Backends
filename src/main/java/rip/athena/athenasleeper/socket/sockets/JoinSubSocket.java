@@ -34,11 +34,8 @@ public class JoinSubSocket extends SubSocket{
 
         final ActiveInfo activeInfo = m_userService.getActiveInformation(currentUserSession.getUserEntity(), "update");
         String updatePayload = new Gson().toJson(activeInfo);
-        for (UserSession userSession : AthenaSleeperApplication.getUserWebSocketSessions().values()) {
-            if (!userSession.getSession().getId().equals(p_session.getId())) {
-                userSession.getSession().sendMessage(new TextMessage(updatePayload));
-            }
-        }
+
+        currentUserSession.broadcastToOthers(updatePayload);
 
         log.info("Created User Session from {}", p_session.getRemoteAddress().getAddress().getHostAddress());
     }

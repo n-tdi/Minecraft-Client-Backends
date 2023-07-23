@@ -10,6 +10,7 @@ import rip.athena.athenasleeper.entity.RankEntity;
 import rip.athena.athenasleeper.entity.UserEntity;
 import rip.athena.athenasleeper.model.ActiveInfo;
 import rip.athena.athenasleeper.model.UserSession;
+import rip.athena.athenasleeper.repository.AvailableCosmeticRepository;
 import rip.athena.athenasleeper.repository.OwnedCosmeticRepository;
 import rip.athena.athenasleeper.repository.RankRepository;
 import rip.athena.athenasleeper.repository.UserRepository;
@@ -24,6 +25,7 @@ public class UserServiceImpl implements UserService{
     private UserRepository m_userRepository;
     private RankRepository m_rankRepository;
     private OwnedCosmeticRepository m_ownedCosmeticRepository;
+    private AvailableCosmeticRepository m_availableCosmeticRepository;
 
     @Override
     public void userLogOn(final UserSession p_userSession) {
@@ -117,15 +119,15 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public ActiveInfo getActiveInformation(final UserEntity p_userEntity, final String p_type) {
-        final Integer cosmeticId;
+        final AvailableCosmeticEntity cosmeticId;
         if (p_userEntity.getAvailableCosmeticEntity() == null) {
             cosmeticId = null;
         } else {
-            cosmeticId = p_userEntity.getAvailableCosmeticEntity().getId();
+            cosmeticId = p_userEntity.getAvailableCosmeticEntity();
         }
 
         return new ActiveInfo(
-                p_type, p_userEntity.getUuid(), cosmeticId,
+                p_type, p_userEntity.getUuid(), m_availableCosmeticRepository.findById(1).orElseThrow(),
                 p_userEntity.getRankEntity().getAssetLocation());
     }
 }

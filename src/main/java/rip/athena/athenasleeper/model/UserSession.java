@@ -6,10 +6,13 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
+import rip.athena.athenasleeper.AthenaSleeperApplication;
 import rip.athena.athenasleeper.entity.UserEntity;
 import rip.athena.athenasleeper.repository.UserRepository;
 
+import java.io.IOException;
 import java.util.UUID;
 
 @Data
@@ -21,5 +24,13 @@ public class UserSession {
 
     public UserEntity getUserEntity() {
         return m_userRepository.findById(m_uuid).orElseThrow();
+    }
+
+    public void broadcastToOthers(final String p_payload) throws IOException {
+        for (UserSession userSession : AthenaSleeperApplication.getUserWebSocketSessions().values()) {
+            if (!userSession.getSession().getId().equals(m_session.getId())) {
+                userSession.getSession().sendMessage(new TextMessage(p_payload));
+            }
+        }
     }
 }
