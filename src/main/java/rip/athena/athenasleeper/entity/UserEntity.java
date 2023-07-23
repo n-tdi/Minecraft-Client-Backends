@@ -21,6 +21,8 @@ public class UserEntity implements Serializable {
     @Id
     @Column(name = "User_ID")
     private String uuid;
+    @Column(name = "Username")
+    private String username;
     @Column(name = "Online_Status")
     private Boolean online;
     @ManyToOne

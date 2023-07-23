@@ -8,6 +8,7 @@ import rip.athena.athenasleeper.entity.AvailableCosmeticEntity;
 import rip.athena.athenasleeper.entity.OwnedCosmeticEntity;
 import rip.athena.athenasleeper.entity.RankEntity;
 import rip.athena.athenasleeper.entity.UserEntity;
+import rip.athena.athenasleeper.external.PlayerDB;
 import rip.athena.athenasleeper.model.ActiveInfo;
 import rip.athena.athenasleeper.model.UserSession;
 import rip.athena.athenasleeper.repository.AvailableCosmeticRepository;
@@ -26,6 +27,7 @@ public class UserServiceImpl implements UserService{
     private RankRepository m_rankRepository;
     private OwnedCosmeticRepository m_ownedCosmeticRepository;
     private AvailableCosmeticRepository m_availableCosmeticRepository;
+    private PlayerDB m_playerDB;
 
     @Override
     public void userLogOn(final UserSession p_userSession) {
@@ -35,6 +37,10 @@ public class UserServiceImpl implements UserService{
 
         final UserEntity userEntity = m_userRepository.findById(p_userSession.getUuid()).orElseThrow();
         userEntity.setOnline(true);
+
+        final String username = m_playerDB.getUsername(UUID.fromString(p_userSession.getUuid()));
+        userEntity.setUsername(username);
+
         m_userRepository.save(userEntity);
     }
 

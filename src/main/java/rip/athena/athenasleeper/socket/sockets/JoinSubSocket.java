@@ -23,11 +23,12 @@ public class JoinSubSocket extends SubSocket{
     public void handleTextMessage(final WebSocketSession p_session, final Map<String, Object> p_payload) throws IOException {
         final UUID uuid = UUID.fromString((String) p_payload.get("uuid"));
 
-        if (AthenaSleeperApplication.getUserWebSocketSessions().containsKey(p_session.getId())) {
-            return;
+        for (UserSession userSession : AthenaSleeperApplication.getUserWebSocketSessions().values()) {
+            if (userSession.getUuid().equals(uuid.toString())) {
+                p_session.close();
+                return;
+            }
         }
-
-
 
         AthenaSleeperApplication.put(uuid.toString(), p_session);
 

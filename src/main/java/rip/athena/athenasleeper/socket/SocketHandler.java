@@ -60,6 +60,10 @@ public class SocketHandler extends TextWebSocketHandler {
 
         UserSession userSession = AthenaSleeperApplication.getUserWebSocketSessions().get(session.getId());
 
+        if (userSession == null) {
+            return;
+        }
+
         m_userService.userLogOut(userSession);
 
         final ActiveInfo activeInfo = new ActiveInfo("remove", userSession.getUuid(), null, null);
