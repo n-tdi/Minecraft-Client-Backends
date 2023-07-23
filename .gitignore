@@ -27,3 +27,5 @@ replay_pid*
 /.idea/
 target/*
 .env
+frontend/generated
+frontend/index.html
