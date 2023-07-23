@@ -2,10 +2,7 @@ package rip.athena.athenasleeper.controller;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import rip.athena.athenasleeper.entity.AvailableCosmeticEntity;
 import rip.athena.athenasleeper.entity.UserEntity;
 import rip.athena.athenasleeper.repository.AvailableCosmeticRepository;
@@ -49,6 +46,26 @@ public class PrivateEndpointController {
         final AvailableCosmeticEntity availableCosmeticEntity = m_userService.getCosmetic(cosmeticId);
 
         m_ownedCosmeticService.addCosmetic(userEntity, availableCosmeticEntity);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/remove/cosmetic")
+    public ResponseEntity<Void> removeCosmetic(@RequestParam String key, @RequestParam String uuid, @RequestParam int cosmeticId) {
+        if (!m_masterKeyRepository.existsById(key)) { // Permission check
+            return ResponseEntity.status(401).build();
+        }
+
+        if (!m_userService.cosmeticExists(cosmeticId)) {
+            return ResponseEntity.ok().build();
+        }
+        if (!m_userService.existsInTable(uuid)) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        final UserEntity userEntity = m_userService.getUserEntity(uuid);
+        final AvailableCosmeticEntity availableCosmeticEntity = m_userService.getCosmetic(cosmeticId);
+
+        m_ownedCosmeticService.removeCosmetic(userEntity, availableCosmeticEntity);
         return ResponseEntity.ok().build();
     }
 }
