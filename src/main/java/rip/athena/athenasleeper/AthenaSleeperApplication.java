@@ -37,7 +37,7 @@ public class AthenaSleeperApplication extends SpringBootServletInitializer {
 		SpringApplication.run(AthenaSleeperApplication.class, args);
 	}
 
-	public static void put(final UUID p_uuid, final WebSocketSession p_webSocketSession) {
+	public static void put(final String p_uuid, final WebSocketSession p_webSocketSession) {
 		final UserSession userSession = new UserSession(p_uuid, p_webSocketSession, m_userRepository);
 		m_userWebSocketSessions.put(p_webSocketSession.getId(), userSession);
 	}

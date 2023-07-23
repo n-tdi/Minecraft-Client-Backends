@@ -48,23 +48,24 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void insertIntoTable(final UUID p_uuid) {
+    public void insertIntoTable(final String p_uuid) {
         final UserEntity userEntity = new UserEntity();
 
         userEntity.setUuid(p_uuid);
         userEntity.setOnline(false);
         userEntity.setRankEntity(m_rankRepository.findById(1).orElseThrow());
+        userEntity.setAvailableCosmeticEntity(null);
 
         m_userRepository.save(userEntity);
     }
 
     @Override
-    public boolean existsInTable(final UUID p_uuid) {
+    public boolean existsInTable(final String p_uuid) {
         return m_userRepository.existsById(p_uuid);
     }
 
     @Override
-    public boolean ownsCosmetic(final UUID p_uuid, final AvailableCosmeticEntity p_availableCosmeticEntity) {
+    public boolean ownsCosmetic(final String p_uuid, final AvailableCosmeticEntity p_availableCosmeticEntity) {
         final List<AvailableCosmeticEntity> availableCosmeticEntities = getOwnedCosmetics(p_uuid);
 
         boolean found = false;
@@ -80,14 +81,14 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public List<AvailableCosmeticEntity> getOwnedCosmetics(final UUID p_uuid) {
+    public List<AvailableCosmeticEntity> getOwnedCosmetics(final String p_uuid) {
         return m_ownedCosmeticRepository.findAllByUserEntity_Uuid(p_uuid).stream()
                 .map(OwnedCosmeticEntity::getAvailableCosmeticEntity)
                 .toList();
     }
 
     @Override
-    public RankEntity getRank(final UUID p_uuid) {
+    public RankEntity getRank(final String p_uuid) {
         Optional<UserEntity> optionalRank = m_userRepository.findById(p_uuid);
 
         if (optionalRank.isPresent()) {
@@ -106,13 +107,25 @@ public class UserServiceImpl implements UserService{
                 .toList();
 
         for (UserEntity userEntity : onlineUsers) {
-            final ActiveInfo activeInfo = new ActiveInfo(
-                    userEntity.getUuid(), userEntity.getAvailableCosmeticEntity().getId(),
-                    userEntity.getRankEntity().getAssetLocation());
+            final ActiveInfo activeInfo = getActiveInformation(userEntity, "fetch");
 
             activeInfoList.add(activeInfo);
         }
 
         return activeInfoList;
+    }
+
+    @Override
+    public ActiveInfo getActiveInformation(final UserEntity p_userEntity, final String p_type) {
+        final Integer cosmeticId;
+        if (p_userEntity.getAvailableCosmeticEntity() == null) {
+            cosmeticId = null;
+        } else {
+            cosmeticId = p_userEntity.getAvailableCosmeticEntity().getId();
+        }
+
+        return new ActiveInfo(
+                p_type, p_userEntity.getUuid(), cosmeticId,
+                p_userEntity.getRankEntity().getAssetLocation());
     }
 }

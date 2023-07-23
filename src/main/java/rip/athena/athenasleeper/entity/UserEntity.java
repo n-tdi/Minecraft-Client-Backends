@@ -19,12 +19,12 @@ import java.util.UUID;
 @Table(name = "users")
 public class UserEntity implements Serializable {
     @Id
-    @Column(name = "UUID")
-    private UUID uuid;
-    @Column(name = "Online")
+    @Column(name = "User_ID")
+    private String uuid;
+    @Column(name = "Online_Status")
     private Boolean online;
     @ManyToOne
-    @JoinColumn(name = "Rank")
+    @JoinColumn(name = "Rank_Entity")
     private RankEntity rankEntity;
     @ManyToOne
     @JoinColumn(name = "Equipped_Cosmetic")

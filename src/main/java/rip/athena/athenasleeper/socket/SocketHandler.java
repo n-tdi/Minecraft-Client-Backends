@@ -3,6 +3,7 @@ package rip.athena.athenasleeper.socket;
 import com.google.gson.Gson;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -22,12 +23,13 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 @Slf4j
 @Component
-@AllArgsConstructor
 public class SocketHandler extends TextWebSocketHandler {
     private final Map<String, SubSocket> m_subSockets = new HashMap<>();
     private UserService m_userService;
 
-    public SocketHandler() {
+    @Autowired
+    public SocketHandler(UserService p_userService) {
+        m_userService = p_userService;
         m_subSockets.put("join", new JoinSubSocket(m_userService));
     }
 
@@ -51,6 +53,9 @@ public class SocketHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionClosed(final WebSocketSession session, final CloseStatus status) throws Exception {
         log.info("Connection lost from {}", session.getRemoteAddress().getAddress().getHostAddress());
+
+        m_userService.userLogOut(AthenaSleeperApplication.getUserWebSocketSessions().get(session.getId()));
+
         AthenaSleeperApplication.remove(session.getId());
     }
 }

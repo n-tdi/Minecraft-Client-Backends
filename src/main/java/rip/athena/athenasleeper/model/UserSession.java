@@ -15,7 +15,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 public class UserSession {
-    private final UUID m_uuid;
+    private final String m_uuid;
     private final WebSocketSession m_session;
     private UserRepository m_userRepository;
 

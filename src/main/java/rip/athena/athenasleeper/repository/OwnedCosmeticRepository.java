@@ -11,5 +11,5 @@ import java.util.UUID;
 
 @Repository
 public interface OwnedCosmeticRepository extends JpaRepository<OwnedCosmeticEntity, Integer> {
-    List<OwnedCosmeticEntity> findAllByUserEntity_Uuid(UUID p_uuid);
+    List<OwnedCosmeticEntity> findAllByUserEntity_Uuid(String p_uuid);
 }

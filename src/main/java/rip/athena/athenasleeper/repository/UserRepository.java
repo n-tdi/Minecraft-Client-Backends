@@ -7,5 +7,5 @@ import rip.athena.athenasleeper.entity.UserEntity;
 import java.util.UUID;
 
 @Repository
-public interface UserRepository extends JpaRepository<UserEntity, UUID> {
+public interface UserRepository extends JpaRepository<UserEntity, String> {
 }
