@@ -15,9 +15,13 @@ import rip.athena.athenasleeper.ui.components.Card;
 public class StatsView extends FormLayout {
     public StatsView() {
         setResponsiveSteps(new ResponsiveStep("0", 3));
+        setSizeFull();
 
         final Card usersCard = new Card("Active Users");
-        usersCard.addItemToContainer(new H1("0"));
+        H1 value = new H1("0");
+        value.getStyle().set("margin-left", "12px");
+
+        usersCard.addItemToContainer(value);
 
         add(usersCard);
     }

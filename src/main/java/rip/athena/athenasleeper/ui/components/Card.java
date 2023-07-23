@@ -16,6 +16,7 @@ public class Card extends Div {
 
         m_container.add(new H4(p_title));
         m_container.setClassName("container");
+        getStyle().remove("margin-left");
 
         add(m_container);
         setClassName("card");
