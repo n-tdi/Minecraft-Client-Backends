@@ -1,6 +1,7 @@
 package rip.athena.athenasleeper.socket;
 
 import com.google.gson.Gson;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
@@ -8,6 +9,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import rip.athena.athenasleeper.AthenaSleeperApplication;
+import rip.athena.athenasleeper.services.UserService;
 import rip.athena.athenasleeper.socket.sockets.JoinSubSocket;
 import rip.athena.athenasleeper.socket.sockets.SubSocket;
 
@@ -20,11 +22,13 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 @Slf4j
 @Component
+@AllArgsConstructor
 public class SocketHandler extends TextWebSocketHandler {
     private final Map<String, SubSocket> m_subSockets = new HashMap<>();
+    private UserService m_userService;
 
     public SocketHandler() {
-        m_subSockets.put("join", new JoinSubSocket());
+        m_subSockets.put("join", new JoinSubSocket(m_userService));
     }
 
     @Override

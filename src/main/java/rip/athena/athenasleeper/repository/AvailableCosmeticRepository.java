@@ -8,5 +8,5 @@ import rip.athena.athenasleeper.entity.UserEntity;
 import java.util.UUID;
 
 @Repository
-public interface AvailableCosmeticRepository extends JpaRepository<AvailableCosmeticEntity, UUID> {
+public interface AvailableCosmeticRepository extends JpaRepository<AvailableCosmeticEntity, Integer> {
 }

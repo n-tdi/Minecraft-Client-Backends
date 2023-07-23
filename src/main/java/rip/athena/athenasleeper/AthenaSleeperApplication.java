@@ -1,5 +1,6 @@
 package rip.athena.athenasleeper;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.websocket.Session;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,13 +25,16 @@ public class AthenaSleeperApplication extends SpringBootServletInitializer {
 	@Getter
 	private static final Map<String, UserSession> m_userWebSocketSessions = new HashMap<>();
 	@Autowired
+	private UserRepository m_userRepository0;
 	private static UserRepository m_userRepository;
-	@Autowired
-	private static MasterKeyRepository m_masterKeyRepository;
+
+	@PostConstruct
+	private void postConstructor() {
+		m_userRepository = this.m_userRepository0;
+	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(AthenaSleeperApplication.class, args);
-		m_masterKeyRepository.save(new MasterKeyEntity());
 	}
 
 	public static void put(final UUID p_uuid, final WebSocketSession p_webSocketSession) {

@@ -22,9 +22,10 @@ public class UserEntity implements Serializable {
     @Column(name = "UUID")
     private UUID uuid;
     @Column(name = "Online")
-    private boolean online;
-    @Column(name = "Rank")
-    private String rank;
+    private Boolean online;
+    @ManyToOne
+    @JoinColumn(name = "Rank")
+    private RankEntity rankEntity;
     @ManyToOne
     @JoinColumn(name = "Equipped_Cosmetic")
     private AvailableCosmeticEntity availableCosmeticEntity;
