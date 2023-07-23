@@ -67,6 +67,11 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public boolean cosmeticExists(final int p_id) {
+        return m_availableCosmeticRepository.existsById(p_id);
+    }
+
+    @Override
     public boolean ownsCosmetic(final String p_uuid, final AvailableCosmeticEntity p_availableCosmeticEntity) {
         final List<AvailableCosmeticEntity> availableCosmeticEntities = getOwnedCosmetics(p_uuid);
 
@@ -87,6 +92,20 @@ public class UserServiceImpl implements UserService{
         return m_ownedCosmeticRepository.findAllByUserEntity_Uuid(p_uuid).stream()
                 .map(OwnedCosmeticEntity::getAvailableCosmeticEntity)
                 .toList();
+    }
+
+    @Override
+    public AvailableCosmeticEntity getCosmetic(final int p_id) {
+        return m_availableCosmeticRepository.findById(p_id).orElse(null);
+    }
+
+    @Override
+    public void updateCosmetic(final String p_uuid, final AvailableCosmeticEntity p_availableCosmeticEntity) {
+        final UserEntity userEntity = m_userRepository.findById(p_uuid).orElseThrow();
+
+        userEntity.setAvailableCosmeticEntity(p_availableCosmeticEntity);
+
+        m_userRepository.save(userEntity);
     }
 
     @Override
@@ -127,7 +146,7 @@ public class UserServiceImpl implements UserService{
         }
 
         return new ActiveInfo(
-                p_type, p_userEntity.getUuid(), m_availableCosmeticRepository.findById(1).orElseThrow(),
+                p_type, p_userEntity.getUuid(), cosmeticId,
                 p_userEntity.getRankEntity().getAssetLocation());
     }
 }

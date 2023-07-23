@@ -15,6 +15,7 @@ import rip.athena.athenasleeper.model.UserSession;
 import rip.athena.athenasleeper.services.UserService;
 import rip.athena.athenasleeper.socket.sockets.JoinSubSocket;
 import rip.athena.athenasleeper.socket.sockets.SubSocket;
+import rip.athena.athenasleeper.socket.sockets.UpdateCosmeticSubSocket;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -33,6 +34,7 @@ public class SocketHandler extends TextWebSocketHandler {
     public SocketHandler(UserService p_userService) {
         m_userService = p_userService;
         m_subSockets.put("join", new JoinSubSocket(m_userService));
+        m_subSockets.put("update-cosmetic", new UpdateCosmeticSubSocket(m_userService));
     }
 
     @Override
@@ -42,8 +44,8 @@ public class SocketHandler extends TextWebSocketHandler {
 
     @Override
     protected void handleTextMessage(final WebSocketSession session, final TextMessage message) throws Exception {
-        final Map<String, String> payload = new Gson().fromJson(message.getPayload(), Map.class);
-        final String type = payload.getOrDefault("type", "none");
+        final Map<String, Object> payload = new Gson().fromJson(message.getPayload(), Map.class);
+        final String type = (String) payload.getOrDefault("type", "none");
 
         for (Map.Entry<String, SubSocket> subSocket : m_subSockets.entrySet()) {
             if (type.equals(subSocket.getKey())) {
@@ -60,7 +62,7 @@ public class SocketHandler extends TextWebSocketHandler {
 
         m_userService.userLogOut(userSession);
 
-        final ActiveInfo activeInfo = new ActiveInfo("Remove", userSession.getUuid(), null, null);
+        final ActiveInfo activeInfo = new ActiveInfo("remove", userSession.getUuid(), null, null);
 
         userSession.broadcastToOthers(new Gson().toJson(activeInfo));
 

@@ -20,8 +20,15 @@ public class JoinSubSocket extends SubSocket{
     private UserService m_userService;
 
     @Override
-    public void handleTextMessage(final WebSocketSession p_session, final Map<String, String> p_payload) throws IOException {
-        final UUID uuid = UUID.fromString(p_payload.get("uuid"));
+    public void handleTextMessage(final WebSocketSession p_session, final Map<String, Object> p_payload) throws IOException {
+        final UUID uuid = UUID.fromString((String) p_payload.get("uuid"));
+
+        if (AthenaSleeperApplication.getUserWebSocketSessions().containsKey(p_session.getId())) {
+            return;
+        }
+
+
+
         AthenaSleeperApplication.put(uuid.toString(), p_session);
 
         m_userService.userLogOn(AthenaSleeperApplication.getUserWebSocketSessions().get(p_session.getId()));

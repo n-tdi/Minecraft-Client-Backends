@@ -14,8 +14,11 @@ public interface UserService {
     void userLogOut(UserSession p_userSession);
     void insertIntoTable(String p_uuid);
     boolean existsInTable(String p_uuid);
+    boolean cosmeticExists(int p_id);
     boolean ownsCosmetic(String p_uuid, AvailableCosmeticEntity p_availableCosmeticEntity);
     List<AvailableCosmeticEntity> getOwnedCosmetics(String p_uuid);
+    AvailableCosmeticEntity getCosmetic(int p_id);
+    void updateCosmetic(String p_uuid, AvailableCosmeticEntity p_availableCosmeticEntity);
     RankEntity getRank(String p_uuid);
     List<ActiveInfo> getActiveInformation();
     ActiveInfo getActiveInformation(UserEntity p_userEntity, String p_type);
