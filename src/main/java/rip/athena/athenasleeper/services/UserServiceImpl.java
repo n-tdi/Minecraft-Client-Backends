@@ -67,6 +67,11 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public UserEntity getUserEntity(final String p_uuid) {
+        return m_userRepository.findById(p_uuid).orElseThrow();
+    }
+
+    @Override
     public boolean cosmeticExists(final int p_id) {
         return m_availableCosmeticRepository.existsById(p_id);
     }
