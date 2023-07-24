@@ -26,4 +26,9 @@ public class OwnedCosmeticServiceImpl implements OwnedCosmeticService{
     public void removeCosmetic(final UserEntity p_userEntity, final AvailableCosmeticEntity p_availableCosmeticEntity) {
         m_ownedCosmeticRepository.deleteAllByUserEntityAndAvailableCosmeticEntity(p_userEntity, p_availableCosmeticEntity);
     }
+
+    @Override
+    public long countAllOwnedCosmetics() {
+        return m_ownedCosmeticRepository.count();
+    }
 }

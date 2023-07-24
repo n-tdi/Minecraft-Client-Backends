@@ -7,12 +7,13 @@ import rip.athena.athenasleeper.model.ActiveInfo;
 import rip.athena.athenasleeper.model.UserSession;
 
 import java.util.List;
-import java.util.UUID;
 
 public interface UserService {
     void userLogOn(UserSession p_userSession);
     void userLogOut(UserSession p_userSession);
     void insertIntoTable(String p_uuid);
+    long getAmountOnline();
+    long getTotal();
     boolean existsInTable(String p_uuid);
     UserEntity getUserEntity(String p_uuid);
     boolean cosmeticExists(int p_id);

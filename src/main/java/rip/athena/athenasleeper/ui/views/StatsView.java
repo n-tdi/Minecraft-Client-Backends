@@ -1,28 +1,46 @@
 package rip.athena.athenasleeper.ui.views;
 
-import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
+import org.springframework.beans.factory.annotation.Autowired;
+import rip.athena.athenasleeper.services.OwnedCosmeticService;
+import rip.athena.athenasleeper.services.UserService;
 import rip.athena.athenasleeper.ui.MainLayout;
 import rip.athena.athenasleeper.ui.components.Card;
 
 @Route(value = "/stats", layout = MainLayout.class)
 @RouteAlias(value = "", layout = MainLayout.class)
 public class StatsView extends FormLayout {
-    public StatsView() {
-        setResponsiveSteps(new ResponsiveStep("0", 3));
-        setSizeFull();
+    private final UserService m_userService;
+    private final OwnedCosmeticService m_ownedCosmeticService;
 
-        final Card usersCard = new Card("Active Users");
-        H1 value = new H1("0");
-        value.getStyle().set("margin-left", "12px");
+    public StatsView(@Autowired UserService p_userService, @Autowired OwnedCosmeticService p_ownedCosmeticService) {
+        m_userService = p_userService;
+        m_ownedCosmeticService = p_ownedCosmeticService;
 
-        usersCard.addItemToContainer(value);
+        setResponsiveSteps(new ResponsiveStep("0", 5));
 
-        add(usersCard);
+        H1 activeUsers = new H1(String.valueOf(m_userService.getAmountOnline()));
+        H1 totalUsers = new H1(String.valueOf(m_userService.getTotal()));
+        H1 totalCosmeticsInCirculation = new H1(String.valueOf(m_ownedCosmeticService.countAllOwnedCosmetics()));
+
+        add(
+                createStatCard("Active Users", activeUsers),
+                createStatCard("Total Users", totalUsers),
+                createStatCard("Purchased Cosmetics", totalCosmeticsInCirculation)
+        );
+
+        getStyle().set("margin-left", "2rem");
+    }
+
+    private Card createStatCard(final String p_title, final H1 p_value) {
+        final Card usersCard = new Card(p_title);
+        p_value.setWidthFull();
+        p_value.getStyle().set("text-align", "right");
+        usersCard.addItemToContainer(p_value);
+
+        return usersCard;
     }
 }

@@ -3,7 +3,6 @@ package rip.athena.athenasleeper.services;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import rip.athena.athenasleeper.AthenaSleeperApplication;
 import rip.athena.athenasleeper.entity.AvailableCosmeticEntity;
 import rip.athena.athenasleeper.entity.OwnedCosmeticEntity;
 import rip.athena.athenasleeper.entity.RankEntity;
@@ -16,8 +15,10 @@ import rip.athena.athenasleeper.repository.OwnedCosmeticRepository;
 import rip.athena.athenasleeper.repository.RankRepository;
 import rip.athena.athenasleeper.repository.UserRepository;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -65,6 +66,16 @@ public class UserServiceImpl implements UserService{
         userEntity.setAvailableCosmeticEntity(null);
 
         m_userRepository.save(userEntity);
+    }
+
+    @Override
+    public long getAmountOnline() {
+        return m_userRepository.countAllByOnline(true);
+    }
+
+    @Override
+    public long getTotal() {
+        return m_userRepository.count();
     }
 
     @Override
