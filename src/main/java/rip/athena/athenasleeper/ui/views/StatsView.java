@@ -2,6 +2,7 @@ package rip.athena.athenasleeper.ui.views;
 
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import rip.athena.athenasleeper.services.UserService;
 import rip.athena.athenasleeper.ui.MainLayout;
 import rip.athena.athenasleeper.ui.components.Card;
 
+@PageTitle("Stats | Athena CRM")
 @Route(value = "/stats", layout = MainLayout.class)
 @RouteAlias(value = "", layout = MainLayout.class)
 public class StatsView extends FormLayout {
