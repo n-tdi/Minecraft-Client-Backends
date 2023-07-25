@@ -22,7 +22,7 @@ public class StatsView extends FormLayout {
         m_userService = p_userService;
         m_ownedCosmeticService = p_ownedCosmeticService;
 
-        setResponsiveSteps(new ResponsiveStep("0", 5));
+        setResponsiveSteps(new ResponsiveStep("0", 4));
 
         H1 activeUsers = new H1(String.valueOf(m_userService.getAmountOnline()));
         H1 totalUsers = new H1(String.valueOf(m_userService.getTotal()));
