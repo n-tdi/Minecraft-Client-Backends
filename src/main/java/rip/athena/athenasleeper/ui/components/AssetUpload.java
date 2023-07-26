@@ -4,33 +4,31 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import rip.athena.athenasleeper.services.FileServingService;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Random;
 
 @Slf4j
 public class AssetUpload extends Upload {
-    public AssetUpload(FileServingService p_fileServingService, MemoryBuffer p_memoryBuffer, final int p_id) {
+    private final FileServingService m_fileServingService;
+    @Getter
+    private InputStream m_inputStream;
+    public AssetUpload(FileServingService p_fileServingService, MemoryBuffer p_memoryBuffer) {
         super(p_memoryBuffer);
         this.setAcceptedFileTypes("image/png", ".png");
+        m_fileServingService = p_fileServingService;
 
         this.addSucceededListener(event -> {
-            InputStream fileData = p_memoryBuffer.getInputStream();
+            m_inputStream = p_memoryBuffer.getInputStream();
+
             String fileName = event.getFileName();
             long contentLength = event.getContentLength();
             String mimeType = event.getMIMEType();
 
             log.info("Mime Type: {}, File Name: {}, Content Length: {}", mimeType, fileName, contentLength);
-            try {
-                p_fileServingService.storeCosmeticFile(fileData, p_id);
-            } catch (IOException p_e) {
-                throw new RuntimeException(p_e);
-            }
         });
 
         this.addFileRejectedListener(event -> {
@@ -40,5 +38,16 @@ public class AssetUpload extends Upload {
                     Notification.Position.MIDDLE);
             notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
         });
+    }
+
+    public void storeFile(final int p_id) {
+        if (m_inputStream == null) {
+            return;
+        }
+        try {
+            m_fileServingService.storeCosmeticFile(m_inputStream, p_id);
+        } catch (IOException p_e) {
+            throw new RuntimeException(p_e);
+        }
     }
 }
