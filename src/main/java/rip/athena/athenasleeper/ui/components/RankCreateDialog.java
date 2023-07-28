@@ -11,27 +11,27 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import rip.athena.athenasleeper.entity.AvailableCosmeticEntity;
-import rip.athena.athenasleeper.repository.AvailableCosmeticRepository;
-import rip.athena.athenasleeper.services.AvailableCosmeticService;
+import rip.athena.athenasleeper.entity.RankEntity;
+import rip.athena.athenasleeper.repository.RankRepository;
 import rip.athena.athenasleeper.services.FileServingService;
+import rip.athena.athenasleeper.services.RankService;
 
 @Slf4j
-public class CosmeticCreateDialog extends Dialog {
+public class RankCreateDialog extends Dialog {
 
     private TextField m_displayNameField;
     private Select<Boolean> m_animatedSelect;
     private NumberField m_numberField;
     private AssetUpload m_assetUpload;
-    private final AvailableCosmeticService m_availableCosmeticService;
-    private final AvailableCosmeticRepository m_availableCosmeticRepository;
+    private final RankService m_rankService;
+    private final RankRepository m_rankRepository;
 
-    public CosmeticCreateDialog(@Autowired FileServingService p_fileServingService,
-                                @Autowired AvailableCosmeticService p_availableCosmeticService,
-                                @Autowired AvailableCosmeticRepository p_availableCosmeticRepository) {
+    public RankCreateDialog(@Autowired FileServingService p_fileServingService,
+                            @Autowired RankService p_rankService,
+                            @Autowired RankRepository p_rankRepository) {
         super();
-        m_availableCosmeticService = p_availableCosmeticService;
-        m_availableCosmeticRepository = p_availableCosmeticRepository;
+        m_rankService = p_rankService;
+        m_rankRepository = p_rankRepository;
 
         setHeaderTitle("New Cosmetic");
 
@@ -48,19 +48,9 @@ public class CosmeticCreateDialog extends Dialog {
 
         m_displayNameField = new TextField("Display Name");
 
-        m_animatedSelect = new Select<>();
-        m_animatedSelect.setLabel("Animated");
-        m_animatedSelect.setItems(true, false);
-        m_animatedSelect.setValue(false);
-
-        m_numberField = new NumberField("Frames (Set to -1 if not animated)");
-        m_numberField.setMin(-1);
-        m_numberField.setValue(-1D);
-        m_numberField.setStep(1D);
-
         m_assetUpload = new AssetUpload(p_fileServingService, new MemoryBuffer());
 
-        VerticalLayout dialogLayout = new VerticalLayout(m_displayNameField, m_animatedSelect, m_numberField, m_assetUpload);
+        VerticalLayout dialogLayout = new VerticalLayout(m_displayNameField, m_assetUpload);
         dialogLayout.setPadding(false);
         dialogLayout.setSpacing(false);
         dialogLayout.setAlignItems(FlexComponent.Alignment.STRETCH);
@@ -76,18 +66,13 @@ public class CosmeticCreateDialog extends Dialog {
                 return;
             }
 
-            final boolean animated = m_animatedSelect.getValue();
-
-            final int frames = m_numberField.getValue().intValue();
-            final Integer framesNatural = (frames == -1 ? null : frames);
-
             if (m_assetUpload.getInputStream() == null) {
                 return;
             }
 
-            final AvailableCosmeticEntity availableCosmeticEntity = m_availableCosmeticService.createCosmetic(displayName, animated, framesNatural);
+            final RankEntity rankEntity = m_rankService.createRank(displayName);
 
-            m_assetUpload.storeFile(availableCosmeticEntity.getId(), true, animated);
+            m_assetUpload.storeFile(rankEntity.getRankId(), false, false);
 
             dialog.close();
         });

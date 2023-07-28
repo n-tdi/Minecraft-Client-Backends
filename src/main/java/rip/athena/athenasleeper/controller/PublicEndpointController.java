@@ -49,7 +49,7 @@ public class PublicEndpointController {
         return new HttpEntity<byte[]>(image, headers);
     }
 
-    @RequestMapping("/rank/{id}.gif")
+    @RequestMapping("/rank/{id}.png67")
     @ResponseBody
     public HttpEntity<byte[]> getRank(@PathVariable int id) throws IOException {
         byte[] image = m_fileServingService.getByteInfoOfStoreRankImage(id);

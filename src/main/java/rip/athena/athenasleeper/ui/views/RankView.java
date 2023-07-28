@@ -4,6 +4,8 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.router.Route;
@@ -13,6 +15,7 @@ import rip.athena.athenasleeper.repository.RankRepository;
 import rip.athena.athenasleeper.services.FileServingService;
 import rip.athena.athenasleeper.services.RankService;
 import rip.athena.athenasleeper.ui.MainLayout;
+import rip.athena.athenasleeper.ui.components.RankCreateDialog;
 import rip.athena.athenasleeper.utility.HostnameUtil;
 
 @Route(value = "/ranks", layout = MainLayout.class)
@@ -38,15 +41,15 @@ public class RankView extends VerticalLayout {
             return viewButton;
         }).setHeader("View Asset");
 
-//        final CosmeticCreateDialog cosmeticCreateDialog = new CosmeticCreateDialog(p_fileServingService, p_availableCosmeticService, p_availableCosmeticRepository);
+        final RankCreateDialog createDialog = new RankCreateDialog(p_fileServingService, p_rankService, p_rankRepository);
 
-//        final Button createCosmeticButton = new Button(new Span(VaadinIcon.HEART.create(), new Span(" Create New Cosmetic "), VaadinIcon.HEART.create()));
-//        createCosmeticButton.setWidthFull();
-//        createCosmeticButton.addThemeVariants(ButtonVariant.MATERIAL_CONTAINED);
-//        createCosmeticButton.addClickListener(p_buttonClickEvent -> {
-//            cosmeticCreateDialog.open();
-//        });
+        final Button createCosmeticButton = new Button(new Span(VaadinIcon.TAG.create(), new Span(" Create New Cosmetic "), VaadinIcon.TAG.create()));
+        createCosmeticButton.setWidthFull();
+        createCosmeticButton.addThemeVariants(ButtonVariant.MATERIAL_CONTAINED);
+        createCosmeticButton.addClickListener(p_buttonClickEvent -> {
+            createDialog.open();
+        });
 
-        add(rankEntityGrid/*,createCosmeticButton, cosmeticCreateDialog */);
+        add(rankEntityGrid, createCosmeticButton, createDialog);
     }
 }

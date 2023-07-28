@@ -13,12 +13,11 @@ public class RankServiceImpl implements RankService{
     private RankRepository m_rankRepository;
 
     @Override
-    public void createRank(final String p_rankName) {
+    public RankEntity createRank(final String p_rankName) {
         final RankEntity rankEntity = new RankEntity();
         rankEntity.setRankName(p_rankName);
-        m_rankRepository.save(rankEntity);
-
         log.info("Created {} as a new rank", p_rankName);
+        return m_rankRepository.save(rankEntity);
     }
 
     @Override

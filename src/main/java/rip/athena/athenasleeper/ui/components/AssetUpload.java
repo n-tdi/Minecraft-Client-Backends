@@ -1,5 +1,6 @@
 package rip.athena.athenasleeper.ui.components;
 
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.upload.Upload;
@@ -20,7 +21,7 @@ public class AssetUpload extends Upload {
         super(p_memoryBuffer);
         m_fileServingService = p_fileServingService;
 
-        this.setAcceptedFileTypes("image/png", ".png");
+        this.setAcceptedFileTypes("image/png", ".png", "animated/gif", ".gif");
         this.setMaxFileSize(12 * 1024 * 1024); // 12MB
 
         this.addSucceededListener(event -> {
@@ -42,16 +43,21 @@ public class AssetUpload extends Upload {
         });
     }
 
-    public void storeFile(final int p_id, final boolean p_animated) {
+    public void storeFile(final int p_id, final boolean cosmetic, final boolean p_animated) {
         if (m_inputStream == null) {
             return;
         }
         try {
-            if (p_animated) {
-                m_fileServingService.storeCosmeticAnimatedFile(m_inputStream, p_id);
+            if (cosmetic) {
+                if (p_animated) {
+                    m_fileServingService.storeCosmeticAnimatedFile(m_inputStream, p_id);
+                } else {
+                    m_fileServingService.storeCosmeticFile(m_inputStream, p_id);
+                }
             } else {
-                m_fileServingService.storeCosmeticFile(m_inputStream, p_id);
+                m_fileServingService.storeRankIconFile(m_inputStream, p_id);
             }
+            UI.getCurrent().getPage().reload();
         } catch (IOException p_e) {
             throw new RuntimeException(p_e);
         }
