@@ -1,5 +1,8 @@
 package rip.athena.athenasleeper.services;
 
+import rip.athena.athenasleeper.entity.AvailableCosmeticEntity;
+
 public interface AvailableCosmeticService {
-    int createCosmetic(String p_displayName, boolean p_animated, Integer p_frames, String p_assetLocation);
+    AvailableCosmeticEntity createCosmetic(String p_displayName, boolean p_animated, Integer p_frames);
+
 }

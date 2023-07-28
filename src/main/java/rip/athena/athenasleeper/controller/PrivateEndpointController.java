@@ -2,11 +2,13 @@ package rip.athena.athenasleeper.controller;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import rip.athena.athenasleeper.entity.AvailableCosmeticEntity;
 import rip.athena.athenasleeper.entity.RankEntity;
 import rip.athena.athenasleeper.entity.UserEntity;
-import rip.athena.athenasleeper.repository.AvailableCosmeticRepository;
 import rip.athena.athenasleeper.repository.MasterKeyRepository;
 import rip.athena.athenasleeper.services.AvailableCosmeticService;
 import rip.athena.athenasleeper.services.OwnedCosmeticService;
@@ -43,7 +45,7 @@ public class PrivateEndpointController {
             return ResponseEntity.status(401).build();
         }
 
-        m_availableCosmeticService.createCosmetic(displayName, animated, frames, assetLocation);
+        m_availableCosmeticService.createCosmetic(displayName, animated, frames);
         return ResponseEntity.ok().build();
     }
 

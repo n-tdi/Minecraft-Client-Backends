@@ -44,14 +44,14 @@ public class PublicEndpointController {
     @RequestMapping("/cosmetic/{id}.gif")
     @ResponseBody
     public HttpEntity<byte[]> getCosmeticAnimated(@PathVariable int id) throws IOException {
-        byte[] image = m_fileServingService.getByteInfoOfStoreCosmeticImage(id);
+        byte[] image = m_fileServingService.getByteInfoOfStoreCosmeticAnimated(id);
 
         if (image.length < 2) {
             return null;
         }
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.IMAGE_PNG);
+        headers.setContentType(MediaType.IMAGE_GIF);
         headers.setContentLength(image.length);
 
         return new HttpEntity<byte[]>(image, headers);

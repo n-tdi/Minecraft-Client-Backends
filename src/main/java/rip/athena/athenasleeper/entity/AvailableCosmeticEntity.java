@@ -24,6 +24,4 @@ public class AvailableCosmeticEntity implements Serializable {
     private boolean animated;
     @Column(name = "Frames")
     private Integer frames;
-    @Column(name = "Asset_Location")
-    private String assetLocation;
 }

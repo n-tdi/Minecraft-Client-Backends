@@ -11,20 +11,28 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import rip.athena.athenasleeper.entity.AvailableCosmeticEntity;
+import rip.athena.athenasleeper.repository.AvailableCosmeticRepository;
+import rip.athena.athenasleeper.services.AvailableCosmeticService;
 import rip.athena.athenasleeper.services.FileServingService;
 
 @Slf4j
-@Component
 public class CosmeticCreateDialog extends Dialog {
 
     private TextField m_displayNameField;
     private Select<Boolean> m_animatedSelect;
     private NumberField m_numberField;
     private AssetUpload m_assetUpload;
+    private final AvailableCosmeticService m_availableCosmeticService;
+    private final AvailableCosmeticRepository m_availableCosmeticRepository;
 
-    public CosmeticCreateDialog(@Autowired FileServingService p_fileServingService) {
+    public CosmeticCreateDialog(@Autowired FileServingService p_fileServingService,
+                                @Autowired AvailableCosmeticService p_availableCosmeticService,
+                                @Autowired AvailableCosmeticRepository p_availableCosmeticRepository) {
         super();
+        m_availableCosmeticService = p_availableCosmeticService;
+        m_availableCosmeticRepository = p_availableCosmeticRepository;
+
         setHeaderTitle("New Cosmetic");
 
         VerticalLayout dialogLayout = createDialogLayout(p_fileServingService);
@@ -56,14 +64,13 @@ public class CosmeticCreateDialog extends Dialog {
         dialogLayout.setPadding(false);
         dialogLayout.setSpacing(false);
         dialogLayout.setAlignItems(FlexComponent.Alignment.STRETCH);
-        dialogLayout.getStyle().set("width", "18rem").set("max-width", "100%");
+        dialogLayout.getStyle().set("width", "36em").set("max-width", "100%");
 
         return dialogLayout;
     }
 
     private Button createSaveButton(Dialog dialog) {
         Button saveButton = new Button("Add", e -> {
-
             final String displayName = m_displayNameField.getValue();
             if (displayName == null || displayName.trim().isEmpty()) {
                 return;
@@ -72,12 +79,15 @@ public class CosmeticCreateDialog extends Dialog {
             final boolean animated = m_animatedSelect.getValue();
 
             final int frames = m_numberField.getValue().intValue();
+            final Integer framesNatural = (frames == -1 ? null : frames);
 
             if (m_assetUpload.getInputStream() == null) {
                 return;
             }
 
+            final AvailableCosmeticEntity availableCosmeticEntity = m_availableCosmeticService.createCosmetic(displayName, animated, framesNatural);
 
+            m_assetUpload.storeFile(availableCosmeticEntity.getId(), animated);
 
             dialog.close();
         });

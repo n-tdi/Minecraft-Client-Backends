@@ -30,3 +30,4 @@ target/*
 frontend/generated
 frontend/index.html
 src/main/dev-bundle
+cosmetics/

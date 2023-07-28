@@ -18,8 +18,10 @@ public class AssetUpload extends Upload {
     private InputStream m_inputStream;
     public AssetUpload(FileServingService p_fileServingService, MemoryBuffer p_memoryBuffer) {
         super(p_memoryBuffer);
-        this.setAcceptedFileTypes("image/png", ".png");
         m_fileServingService = p_fileServingService;
+
+        this.setAcceptedFileTypes("image/png", ".png");
+        this.setMaxFileSize(12 * 1024 * 1024); // 12MB
 
         this.addSucceededListener(event -> {
             m_inputStream = p_memoryBuffer.getInputStream();
@@ -40,12 +42,16 @@ public class AssetUpload extends Upload {
         });
     }
 
-    public void storeFile(final int p_id) {
+    public void storeFile(final int p_id, final boolean p_animated) {
         if (m_inputStream == null) {
             return;
         }
         try {
-            m_fileServingService.storeCosmeticFile(m_inputStream, p_id);
+            if (p_animated) {
+                m_fileServingService.storeCosmeticAnimatedFile(m_inputStream, p_id);
+            } else {
+                m_fileServingService.storeCosmeticFile(m_inputStream, p_id);
+            }
         } catch (IOException p_e) {
             throw new RuntimeException(p_e);
         }

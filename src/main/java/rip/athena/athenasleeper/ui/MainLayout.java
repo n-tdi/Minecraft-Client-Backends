@@ -12,6 +12,7 @@ import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.theme.lumo.Lumo;
 import rip.athena.athenasleeper.ui.views.CosmeticsView;
+import rip.athena.athenasleeper.ui.views.RankView;
 import rip.athena.athenasleeper.ui.views.StatsView;
 import rip.athena.athenasleeper.ui.views.UsersView;
 
@@ -37,7 +38,7 @@ public class MainLayout extends AppLayout {
         Tabs tabs = new Tabs();
         tabs.add(createTab(VaadinIcon.CHART, "Stats", StatsView.class),
                 createTab(VaadinIcon.USERS, "Users", UsersView.class),
-                createTab(VaadinIcon.TAG, "Ranks", UsersView.class),
+                createTab(VaadinIcon.TAG, "Ranks", RankView.class),
                 createTab(VaadinIcon.USER_HEART, "Cosmetics", CosmeticsView.class));
         tabs.setOrientation(Tabs.Orientation.VERTICAL);
         return tabs;
