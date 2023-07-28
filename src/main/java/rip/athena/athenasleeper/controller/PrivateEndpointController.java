@@ -92,7 +92,7 @@ public class PrivateEndpointController {
             return ResponseEntity.status(401).build();
         }
 
-        m_rankService.createRank(rankName, assetLocation);
+        m_rankService.createRank(rankName);
         return ResponseEntity.ok().build();
     }
 

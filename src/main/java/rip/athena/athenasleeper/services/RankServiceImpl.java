@@ -13,10 +13,9 @@ public class RankServiceImpl implements RankService{
     private RankRepository m_rankRepository;
 
     @Override
-    public void createRank(final String p_rankName, final String p_assetLocation) {
+    public void createRank(final String p_rankName) {
         final RankEntity rankEntity = new RankEntity();
         rankEntity.setRankName(p_rankName);
-        rankEntity.setAssetLocation(p_assetLocation);
         m_rankRepository.save(rankEntity);
 
         log.info("Created {} as a new rank", p_rankName);

@@ -30,15 +30,7 @@ public class PublicEndpointController {
     public HttpEntity<byte[]> getCosmeticStatic(@PathVariable int id) throws IOException {
         byte[] image = m_fileServingService.getByteInfoOfStoreCosmeticImage(id);
 
-        if (image.length < 2) {
-            return null;
-        }
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.IMAGE_PNG);
-        headers.setContentLength(image.length);
-
-        return new HttpEntity<byte[]>(image, headers);
+        return getHttpEntity(image);
     }
 
     @RequestMapping("/cosmetic/{id}.gif")
@@ -55,5 +47,25 @@ public class PublicEndpointController {
         headers.setContentLength(image.length);
 
         return new HttpEntity<byte[]>(image, headers);
+    }
+
+    @RequestMapping("/rank/{id}.gif")
+    @ResponseBody
+    public HttpEntity<byte[]> getRank(@PathVariable int id) throws IOException {
+        byte[] image = m_fileServingService.getByteInfoOfStoreRankImage(id);
+
+        return getHttpEntity(image);
+    }
+
+    private HttpEntity<byte[]> getHttpEntity(final byte[] p_image) {
+        if (p_image.length < 2) {
+            return null;
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_PNG);
+        headers.setContentLength(p_image.length);
+
+        return new HttpEntity<byte[]>(p_image, headers);
     }
 }

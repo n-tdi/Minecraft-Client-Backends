@@ -19,6 +19,4 @@ public class RankEntity {
     private int rankId;
     @Column(name = "Rank_Name")
     private String rankName;
-    @Column(name = "Asset_Location")
-    private String assetLocation;
 }

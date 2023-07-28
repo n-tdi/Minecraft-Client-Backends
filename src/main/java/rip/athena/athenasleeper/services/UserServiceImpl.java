@@ -14,6 +14,7 @@ import rip.athena.athenasleeper.repository.AvailableCosmeticRepository;
 import rip.athena.athenasleeper.repository.OwnedCosmeticRepository;
 import rip.athena.athenasleeper.repository.RankRepository;
 import rip.athena.athenasleeper.repository.UserRepository;
+import rip.athena.athenasleeper.utility.HostnameUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -167,15 +168,18 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public ActiveInfo getActiveInformation(final UserEntity p_userEntity, final String p_type) {
-        final AvailableCosmeticEntity cosmeticId;
+        final AvailableCosmeticEntity cosmeticEntity;
         if (p_userEntity.getAvailableCosmeticEntity() == null) {
-            cosmeticId = null;
+            cosmeticEntity = null;
         } else {
-            cosmeticId = p_userEntity.getAvailableCosmeticEntity();
+            cosmeticEntity = p_userEntity.getAvailableCosmeticEntity();
         }
 
+        final RankEntity rankEntity = p_userEntity.getRankEntity();
+
         return new ActiveInfo(
-                p_type, p_userEntity.getUuid(), cosmeticId,
-                p_userEntity.getRankEntity().getAssetLocation());
+                p_type, p_userEntity.getUuid(), cosmeticEntity,
+                HostnameUtil.resolveUrl("/api/v1/public/rank/" + rankEntity.getRankId() + ".png")
+        );
     }
 }
