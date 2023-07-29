@@ -118,6 +118,7 @@ public class UserServiceImpl implements UserService{
         final List<AvailableCosmeticEntity> rankOwnedCosmetics = m_cosmeticForRankRepository.findAllByRankEntity(rankEntity)
                 .stream()
                 .map(CosmeticForRankEntity::getAvailableCosmeticEntity)
+                .filter(p_availableCosmeticEntity -> !ownedCosmetics.contains(p_availableCosmeticEntity))
                 .toList();
 
         ownedCosmetics.addAll(rankOwnedCosmetics);
