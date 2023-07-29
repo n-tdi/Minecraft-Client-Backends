@@ -3,23 +3,18 @@ package rip.athena.athenasleeper.services;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import rip.athena.athenasleeper.entity.AvailableCosmeticEntity;
-import rip.athena.athenasleeper.entity.OwnedCosmeticEntity;
-import rip.athena.athenasleeper.entity.RankEntity;
-import rip.athena.athenasleeper.entity.UserEntity;
+import rip.athena.athenasleeper.entity.*;
 import rip.athena.athenasleeper.external.PlayerDB;
 import rip.athena.athenasleeper.model.ActiveInfo;
 import rip.athena.athenasleeper.model.UserSession;
-import rip.athena.athenasleeper.repository.AvailableCosmeticRepository;
-import rip.athena.athenasleeper.repository.OwnedCosmeticRepository;
-import rip.athena.athenasleeper.repository.RankRepository;
-import rip.athena.athenasleeper.repository.UserRepository;
+import rip.athena.athenasleeper.repository.*;
 import rip.athena.athenasleeper.utility.HostnameUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -29,6 +24,7 @@ public class UserServiceImpl implements UserService{
     private RankRepository m_rankRepository;
     private OwnedCosmeticRepository m_ownedCosmeticRepository;
     private AvailableCosmeticRepository m_availableCosmeticRepository;
+    private CosmeticForRankRepository m_cosmeticForRankRepository;
     private PlayerDB m_playerDB;
 
     @Override
@@ -112,9 +108,21 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public List<AvailableCosmeticEntity> getOwnedCosmetics(final String p_uuid) {
-        return m_ownedCosmeticRepository.findAllByUserEntity_Uuid(p_uuid).stream()
+        final UserEntity userEntity = m_userRepository.findById(p_uuid).orElseThrow();
+        final RankEntity rankEntity = userEntity.getRankEntity();
+
+        final List<AvailableCosmeticEntity> ownedCosmetics = m_ownedCosmeticRepository.findAllByUserEntity_Uuid(p_uuid).stream()
                 .map(OwnedCosmeticEntity::getAvailableCosmeticEntity)
+                .collect(Collectors.toList());
+
+        final List<AvailableCosmeticEntity> rankOwnedCosmetics = m_cosmeticForRankRepository.findAllByRankEntity(rankEntity)
+                .stream()
+                .map(CosmeticForRankEntity::getAvailableCosmeticEntity)
                 .toList();
+
+        ownedCosmetics.addAll(rankOwnedCosmetics);
+
+        return ownedCosmetics;
     }
 
     @Override
