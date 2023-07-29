@@ -8,6 +8,7 @@ import rip.athena.athenasleeper.entity.RankEntity;
 import rip.athena.athenasleeper.entity.UserEntity;
 import rip.athena.athenasleeper.repository.CosmeticForRankRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,5 +26,27 @@ public class CosmeticForRankServiceImpl implements CosmeticForRankService {
                 .stream()
                 .map(CosmeticForRankEntity::getAvailableCosmeticEntity)
                 .toList();
+    }
+
+    @Override
+    public void addCosmeticToRank(final RankEntity p_rankEntity, final AvailableCosmeticEntity p_availableCosmeticEntity) {
+        final CosmeticForRankEntity cosmeticForRankEntity = new CosmeticForRankEntity();
+        cosmeticForRankEntity.setRankEntity(p_rankEntity);
+        cosmeticForRankEntity.setAvailableCosmeticEntity(p_availableCosmeticEntity);
+
+        m_cosmeticForRankRepository.save(cosmeticForRankEntity);
+    }
+
+    @Override
+    public void removeCosmeticFromRank(final RankEntity p_rankEntity, final AvailableCosmeticEntity p_availableCosmeticEntity) {
+        final List<CosmeticForRankEntity> removableEntities = new ArrayList<>();
+
+        for (final CosmeticForRankEntity cosmeticForRankEntity : m_cosmeticForRankRepository.findAllByRankEntity(p_rankEntity)) {
+            if (cosmeticForRankEntity.getAvailableCosmeticEntity().getId() == p_availableCosmeticEntity.getId()) {
+                removableEntities.add(cosmeticForRankEntity);
+            }
+        }
+
+        m_cosmeticForRankRepository.deleteAll(removableEntities);
     }
 }

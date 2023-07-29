@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface CosmeticForRankRepository extends JpaRepository<CosmeticForRankEntity, Integer> {
     List<CosmeticForRankEntity> findAllByRankEntity(RankEntity p_rankEntity);
+
 }
