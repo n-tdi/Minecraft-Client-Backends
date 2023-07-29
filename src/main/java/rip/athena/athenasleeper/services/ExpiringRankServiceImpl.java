@@ -3,6 +3,7 @@ package rip.athena.athenasleeper.services;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import rip.athena.athenasleeper.entity.ExpiringRankEntity;
+import rip.athena.athenasleeper.entity.RankEntity;
 import rip.athena.athenasleeper.entity.UserEntity;
 import rip.athena.athenasleeper.repository.ExpiringRankRepository;
 
@@ -35,5 +36,13 @@ public class ExpiringRankServiceImpl implements ExpiringRankService {
         m_expiringRankRepository.deleteById(p_userEntity.getUuid());
 
         return expiringRankEntity;
+    }
+
+    @Override
+    public void addExpirationToRank(final UserEntity p_userEntity, final long p_timestampToRemove, final RankEntity p_rankEntity) {
+        final ExpiringRankEntity expiringRankEntity = new ExpiringRankEntity();
+        expiringRankEntity.setUserEntityUuid(p_userEntity.getUuid());
+        expiringRankEntity.setRankEntity(p_rankEntity);
+        expiringRankEntity.setTimestampAtExpiration(p_timestampToRemove);
     }
 }
