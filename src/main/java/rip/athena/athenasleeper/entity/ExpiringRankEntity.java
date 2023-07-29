@@ -14,9 +14,8 @@ import lombok.Setter;
 @Table(name = "expiring_rank")
 public class ExpiringRankEntity {
     @Id
-    @OneToOne
-    @JoinColumn(name = "User_ID")
-    private UserEntity userEntity;
+    @Column(name = "User_ID")
+    private String userEntityUuid;
     @ManyToOne
     @JoinColumn(name = "Rank_After_Expiration")
     private RankEntity rankEntity;
