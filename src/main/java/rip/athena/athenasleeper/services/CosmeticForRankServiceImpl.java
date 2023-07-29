@@ -10,6 +10,7 @@ import rip.athena.athenasleeper.repository.CosmeticForRankRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -48,5 +49,21 @@ public class CosmeticForRankServiceImpl implements CosmeticForRankService {
         }
 
         m_cosmeticForRankRepository.deleteAll(removableEntities);
+    }
+
+    @Override
+    public void setCosmeticForRank(final RankEntity p_rankEntity, final Set<AvailableCosmeticEntity> p_availableCosmeticEntities) {
+        m_cosmeticForRankRepository.deleteAllByRankEntity(p_rankEntity);
+
+        final List<CosmeticForRankEntity> saveAbleCosmeticsForRank = new ArrayList<>();
+
+        for (final AvailableCosmeticEntity availableCosmeticEntity : p_availableCosmeticEntities) {
+            final CosmeticForRankEntity cosmeticForRankEntity = new CosmeticForRankEntity();
+            cosmeticForRankEntity.setRankEntity(p_rankEntity);
+            cosmeticForRankEntity.setAvailableCosmeticEntity(availableCosmeticEntity);
+            saveAbleCosmeticsForRank.add(cosmeticForRankEntity);
+        }
+
+        m_cosmeticForRankRepository.saveAll(saveAbleCosmeticsForRank);
     }
 }
