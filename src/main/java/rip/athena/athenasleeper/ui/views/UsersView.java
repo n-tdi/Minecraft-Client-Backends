@@ -3,10 +3,12 @@ package rip.athena.athenasleeper.ui.views;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.dataview.GridListDataView;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -39,6 +41,8 @@ public class UsersView extends VerticalLayout {
         }).setHeader("Equipped Cosmetic");
         m_userEntityGrid.addColumn(UserEntity::getUuid).setHeader("UUID");
 
+        m_userEntityGrid.setItemDetailsRenderer(createUserDetailRenderer());
+
         TextField searchField = new TextField();
         searchField.setWidth("50%");
         searchField.setPlaceholder("Search");
@@ -56,5 +60,15 @@ public class UsersView extends VerticalLayout {
         });
 
         add(m_userEntityGrid, searchField);
+    }
+
+    private static ComponentRenderer<UserDetails, UserEntity> createUserDetailRenderer() {
+        return new ComponentRenderer<>(UserDetails::new);
+    }
+
+    private static class UserDetails extends VerticalLayout {
+        public UserDetails(final UserEntity p_userEntity) {
+            add(new Span(p_userEntity.getUsername()));
+        }
     }
 }
