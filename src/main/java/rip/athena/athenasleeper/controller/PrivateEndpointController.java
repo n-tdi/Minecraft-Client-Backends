@@ -39,13 +39,14 @@ public class PrivateEndpointController {
 
     @PostMapping("/create/cosmetic")
     public ResponseEntity<Void> createCosmetic(@RequestParam String key, @RequestParam String displayName,
+                                               @RequestParam String category,
                                                @RequestParam boolean animated, @RequestParam(required = false) Integer frames,
                                                @RequestParam String assetLocation) {
         if (!m_masterKeyRepository.existsById(key)) { // Permission check
             return ResponseEntity.status(401).build();
         }
 
-        m_availableCosmeticService.createCosmetic(displayName, animated, frames);
+        m_availableCosmeticService.createCosmetic(displayName, category, animated, frames);
         return ResponseEntity.ok().build();
     }
 

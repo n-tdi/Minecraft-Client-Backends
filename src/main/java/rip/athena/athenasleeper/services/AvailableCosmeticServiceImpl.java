@@ -13,9 +13,10 @@ public class AvailableCosmeticServiceImpl implements AvailableCosmeticService {
     private AvailableCosmeticRepository m_availableCosmeticRepository;
 
     @Override
-    public AvailableCosmeticEntity createCosmetic(final String p_displayName, final boolean p_animated, final Integer p_frames) {
+    public AvailableCosmeticEntity createCosmetic(final String p_displayName, final String p_category, final boolean p_animated, final Integer p_frames) {
         final AvailableCosmeticEntity availableCosmeticEntity = new AvailableCosmeticEntity();
         availableCosmeticEntity.setDisplayName(p_displayName);
+        availableCosmeticEntity.setCategory(p_category);
         availableCosmeticEntity.setAnimated(p_animated);
         availableCosmeticEntity.setFrames(p_frames);
 

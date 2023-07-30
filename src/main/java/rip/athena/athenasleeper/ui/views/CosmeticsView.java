@@ -36,6 +36,7 @@ public class CosmeticsView extends VerticalLayout {
         cosmeticEntityGrid.setDataProvider(cosmeticEntityListDataProvider);
 
         cosmeticEntityGrid.addColumn(AvailableCosmeticEntity::getDisplayName).setHeader("Name");
+        cosmeticEntityGrid.addColumn(AvailableCosmeticEntity::getCategory).setHeader("Category");
         cosmeticEntityGrid.addColumn(AvailableCosmeticEntity::isAnimated).setHeader("Animated");
         cosmeticEntityGrid.addColumn(p_availableCosmeticEntity -> Objects.requireNonNullElse(p_availableCosmeticEntity.getFrames(), "N/A")).setHeader("Frames");
         cosmeticEntityGrid.addComponentColumn(p_availableCosmeticEntity -> {

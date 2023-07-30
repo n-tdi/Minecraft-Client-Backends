@@ -20,6 +20,8 @@ public class AvailableCosmeticEntity implements Serializable {
     private int id;
     @Column(name = "Display_Name")
     private String displayName;
+    @Column(name = "Category")
+    private String category;
     @Column(name = "Animated")
     private boolean animated;
     @Column(name = "Frames")

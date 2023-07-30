@@ -25,6 +25,7 @@ public class CosmeticCreateDialog extends Dialog {
     private AssetUpload m_assetUpload;
     private final AvailableCosmeticService m_availableCosmeticService;
     private final AvailableCosmeticRepository m_availableCosmeticRepository;
+    private Select<String> m_categorySelect;
 
     public CosmeticCreateDialog(@Autowired FileServingService p_fileServingService,
                                 @Autowired AvailableCosmeticService p_availableCosmeticService,
@@ -48,6 +49,11 @@ public class CosmeticCreateDialog extends Dialog {
 
         m_displayNameField = new TextField("Display Name");
 
+        m_categorySelect = new Select<>();
+        m_categorySelect.setLabel("Category");
+        m_categorySelect.setItems("Capes", "Emotes", "Pets", "Wings", "Hats", "Bandannas", "Masks");
+        m_categorySelect.setValue("Capes");
+
         m_animatedSelect = new Select<>();
         m_animatedSelect.setLabel("Animated");
         m_animatedSelect.setItems(true, false);
@@ -60,7 +66,7 @@ public class CosmeticCreateDialog extends Dialog {
 
         m_assetUpload = new AssetUpload(p_fileServingService, new MemoryBuffer());
 
-        VerticalLayout dialogLayout = new VerticalLayout(m_displayNameField, m_animatedSelect, m_numberField, m_assetUpload);
+        VerticalLayout dialogLayout = new VerticalLayout(m_displayNameField, m_categorySelect, m_animatedSelect, m_numberField, m_assetUpload);
         dialogLayout.setPadding(false);
         dialogLayout.setSpacing(false);
         dialogLayout.setAlignItems(FlexComponent.Alignment.STRETCH);
@@ -76,6 +82,8 @@ public class CosmeticCreateDialog extends Dialog {
                 return;
             }
 
+            final String category = m_categorySelect.getValue();
+
             final boolean animated = m_animatedSelect.getValue();
 
             final int frames = m_numberField.getValue().intValue();
@@ -85,7 +93,7 @@ public class CosmeticCreateDialog extends Dialog {
                 return;
             }
 
-            final AvailableCosmeticEntity availableCosmeticEntity = m_availableCosmeticService.createCosmetic(displayName, animated, framesNatural);
+            final AvailableCosmeticEntity availableCosmeticEntity = m_availableCosmeticService.createCosmetic(displayName, category, animated, framesNatural);
 
             m_assetUpload.storeFile(availableCosmeticEntity.getId(), true, animated);
 
