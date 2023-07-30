@@ -3,9 +3,9 @@ package rip.athena.athenasleeper.ui.views;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.dataview.GridListDataView;
-import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
@@ -68,7 +68,15 @@ public class UsersView extends VerticalLayout {
 
     private static class UserDetails extends VerticalLayout {
         public UserDetails(final UserEntity p_userEntity) {
-            add(new Span(p_userEntity.getUsername()));
+            final HorizontalLayout buttonLayout = new HorizontalLayout();
+
+            // Ranks Selector Layout
+
+            // Cosmetics Selector
+
+            // Save Button
+
+            add(buttonLayout);
         }
     }
 }
