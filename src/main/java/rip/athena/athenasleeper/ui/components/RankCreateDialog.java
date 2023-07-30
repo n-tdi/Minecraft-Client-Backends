@@ -33,7 +33,7 @@ public class RankCreateDialog extends Dialog {
         m_rankService = p_rankService;
         m_rankRepository = p_rankRepository;
 
-        setHeaderTitle("New Cosmetic");
+        setHeaderTitle("New Rank");
 
         VerticalLayout dialogLayout = createDialogLayout(p_fileServingService);
         add(dialogLayout);

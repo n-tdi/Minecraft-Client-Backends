@@ -90,7 +90,7 @@ public class RankView extends VerticalLayout {
 
         final RankCreateDialog createDialog = new RankCreateDialog(p_fileServingService, p_rankService, p_rankRepository);
 
-        final Button createCosmeticButton = new Button(new Span(VaadinIcon.TAG.create(), new Span(" Create New Cosmetic "), VaadinIcon.TAG.create()));
+        final Button createCosmeticButton = new Button(new Span(VaadinIcon.TAG.create(), new Span(" Create New Rank "), VaadinIcon.TAG.create()));
         createCosmeticButton.setWidthFull();
         createCosmeticButton.addThemeVariants(ButtonVariant.MATERIAL_CONTAINED);
         createCosmeticButton.addClickListener(p_buttonClickEvent -> {
