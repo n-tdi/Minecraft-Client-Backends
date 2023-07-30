@@ -12,5 +12,6 @@ import java.util.List;
 public interface OwnedCosmeticRepository extends JpaRepository<OwnedCosmeticEntity, Integer> {
     List<OwnedCosmeticEntity> findAllByUserEntity_Uuid(String p_uuid);
     void deleteAllByUserEntityAndAvailableCosmeticEntity(UserEntity p_userEntity, AvailableCosmeticEntity p_availableCosmeticEntity);
+    void deleteAllByUserEntity(UserEntity p_userEntity);
     long count();
 }
