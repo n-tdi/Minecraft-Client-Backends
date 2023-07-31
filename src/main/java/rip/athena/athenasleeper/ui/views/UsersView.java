@@ -5,14 +5,18 @@ import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.MultiSelectComboBox;
+import com.vaadin.flow.component.datepicker.DatePicker;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.dataview.GridListDataView;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
+import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
@@ -20,14 +24,13 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.apache.catalina.util.ErrorPageSupport;
 import org.springframework.beans.factory.annotation.Autowired;
-import rip.athena.athenasleeper.entity.AvailableCosmeticEntity;
-import rip.athena.athenasleeper.entity.CosmeticForRankEntity;
-import rip.athena.athenasleeper.entity.OwnedCosmeticEntity;
-import rip.athena.athenasleeper.entity.UserEntity;
+import rip.athena.athenasleeper.entity.*;
 import rip.athena.athenasleeper.repository.AvailableCosmeticRepository;
 import rip.athena.athenasleeper.repository.OwnedCosmeticRepository;
+import rip.athena.athenasleeper.repository.RankRepository;
 import rip.athena.athenasleeper.repository.UserRepository;
 import rip.athena.athenasleeper.services.OwnedCosmeticService;
+import rip.athena.athenasleeper.services.UserService;
 import rip.athena.athenasleeper.ui.MainLayout;
 
 import java.util.List;
@@ -40,7 +43,8 @@ public class UsersView extends VerticalLayout {
     private final UserRepository m_userRepository;
     private final Grid<UserEntity> m_userEntityGrid;
     public UsersView(@Autowired UserRepository p_userRepository, @Autowired AvailableCosmeticRepository p_availableCosmeticRepository,
-                     @Autowired OwnedCosmeticRepository p_ownedCosmeticRepository, @Autowired OwnedCosmeticService p_ownedCosmeticService) {
+                     @Autowired OwnedCosmeticRepository p_ownedCosmeticRepository, @Autowired OwnedCosmeticService p_ownedCosmeticService,
+                     @Autowired UserService p_userService, @Autowired RankRepository p_rankRepository) {
         m_userRepository = p_userRepository;
 
         m_userEntityGrid = new Grid<>(UserEntity.class, false);
@@ -62,7 +66,8 @@ public class UsersView extends VerticalLayout {
         m_userEntityGrid.setItemDetailsRenderer(
                 createUserDetailRenderer(
                         p_availableCosmeticRepository, p_availableCosmeticRepository.findAll(),
-                        p_ownedCosmeticService, p_ownedCosmeticRepository.findAll()
+                        p_ownedCosmeticService, p_ownedCosmeticRepository.findAll(),
+                        p_userService, p_rankRepository.findAll()
                 )
         );
 
@@ -89,12 +94,13 @@ public class UsersView extends VerticalLayout {
             final AvailableCosmeticRepository p_availableCosmeticRepository,
             final List<AvailableCosmeticEntity> p_availableCosmeticEntities,
             final OwnedCosmeticService p_ownedCosmeticService,
-            final List<OwnedCosmeticEntity> p_ownedCosmeticEntities
+            final List<OwnedCosmeticEntity> p_ownedCosmeticEntities,
+            final UserService p_userService, final List<RankEntity> p_rankEntities
     ) {
         return new ComponentRenderer<>(userEntity ->
                 new UserDetails(
                         userEntity, p_availableCosmeticRepository, p_availableCosmeticEntities, p_ownedCosmeticService,
-                        p_ownedCosmeticEntities
+                        p_ownedCosmeticEntities, p_userService, p_rankEntities
                 )
         );
     }
@@ -103,13 +109,33 @@ public class UsersView extends VerticalLayout {
         public UserDetails(
                 final UserEntity p_userEntity,
                 final AvailableCosmeticRepository p_availableCosmeticRepository, final List<AvailableCosmeticEntity> p_availableCosmeticEntities,
-                final OwnedCosmeticService p_ownedCosmeticService, final List<OwnedCosmeticEntity> p_ownedCosmeticEntities
+                final OwnedCosmeticService p_ownedCosmeticService, final List<OwnedCosmeticEntity> p_ownedCosmeticEntities,
+                final UserService p_userService, final List<RankEntity> p_rankEntities
                 ) {
 
-            final HorizontalLayout buttonLayout = new HorizontalLayout();
+            final FlexLayout buttonLayout = new FlexLayout();
             buttonLayout.setWidthFull();
+            buttonLayout.setAlignContent(FlexLayout.ContentAlignment.CENTER);
+            buttonLayout.setJustifyContentMode(JustifyContentMode.CENTER);
 
             // Ranks Selector Layout
+            final FormLayout rankLayout = new FormLayout();
+
+            final Select<RankEntity> rankSelect = new Select<>();
+            rankSelect.setLabel("Rank");
+            rankSelect.setValue(p_userEntity.getRankEntity());
+            rankSelect.setItems(p_rankEntities);
+            rankSelect.setWidthFull();
+            rankSelect.setItemLabelGenerator(RankEntity::getRankName);
+            rankSelect.getStyle().set("padding-top", "0");
+
+            final DatePicker datePicker = new DatePicker();
+            datePicker.setLabel("Expires (Leave blank if none)");
+
+            rankLayout.setColspan(rankLayout, 2);
+            rankLayout.setColspan(datePicker, 1);
+            rankLayout.setResponsiveSteps(new FormLayout.ResponsiveStep("0", 2));
+            rankLayout.setWidthFull();
 
             // Cosmetics Selector
             final MultiSelectComboBox<AvailableCosmeticEntity> availableCosmeticSelector = new MultiSelectComboBox<>();
@@ -125,7 +151,7 @@ public class UsersView extends VerticalLayout {
                             .collect(Collectors.toList())
             );
 
-            buttonLayout.add(availableCosmeticSelector);
+            buttonLayout.add(rankLayout, availableCosmeticSelector);
 
             // Save Button
             final Button saveButton = new Button("Save");
@@ -137,6 +163,7 @@ public class UsersView extends VerticalLayout {
                 UI.getCurrent().getPage().reload();
             });
 
+            // Main Layout
             add(buttonLayout, saveButton);
             setWidthFull();
         }
