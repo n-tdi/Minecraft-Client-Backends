@@ -6,13 +6,10 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.MultiSelectComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
-import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.dataview.GridListDataView;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -22,19 +19,21 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import org.apache.catalina.util.ErrorPageSupport;
 import org.springframework.beans.factory.annotation.Autowired;
-import rip.athena.athenasleeper.entity.*;
+import rip.athena.athenasleeper.entity.AvailableCosmeticEntity;
+import rip.athena.athenasleeper.entity.OwnedCosmeticEntity;
+import rip.athena.athenasleeper.entity.RankEntity;
+import rip.athena.athenasleeper.entity.UserEntity;
 import rip.athena.athenasleeper.repository.AvailableCosmeticRepository;
 import rip.athena.athenasleeper.repository.OwnedCosmeticRepository;
 import rip.athena.athenasleeper.repository.RankRepository;
 import rip.athena.athenasleeper.repository.UserRepository;
+import rip.athena.athenasleeper.services.ExpiringRankService;
 import rip.athena.athenasleeper.services.OwnedCosmeticService;
 import rip.athena.athenasleeper.services.UserService;
 import rip.athena.athenasleeper.ui.MainLayout;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @PageTitle("Users | Athena CRM")
@@ -44,7 +43,7 @@ public class UsersView extends VerticalLayout {
     private final Grid<UserEntity> m_userEntityGrid;
     public UsersView(@Autowired UserRepository p_userRepository, @Autowired AvailableCosmeticRepository p_availableCosmeticRepository,
                      @Autowired OwnedCosmeticRepository p_ownedCosmeticRepository, @Autowired OwnedCosmeticService p_ownedCosmeticService,
-                     @Autowired UserService p_userService, @Autowired RankRepository p_rankRepository) {
+                     @Autowired UserService p_userService, @Autowired RankRepository p_rankRepository, @Autowired ExpiringRankService p_expiringRankService) {
         m_userRepository = p_userRepository;
 
         m_userEntityGrid = new Grid<>(UserEntity.class, false);
@@ -67,7 +66,7 @@ public class UsersView extends VerticalLayout {
                 createUserDetailRenderer(
                         p_availableCosmeticRepository, p_availableCosmeticRepository.findAll(),
                         p_ownedCosmeticService, p_ownedCosmeticRepository.findAll(),
-                        p_userService, p_rankRepository.findAll()
+                        p_userService, p_rankRepository.findAll(), p_expiringRankService
                 )
         );
 
@@ -95,12 +94,13 @@ public class UsersView extends VerticalLayout {
             final List<AvailableCosmeticEntity> p_availableCosmeticEntities,
             final OwnedCosmeticService p_ownedCosmeticService,
             final List<OwnedCosmeticEntity> p_ownedCosmeticEntities,
-            final UserService p_userService, final List<RankEntity> p_rankEntities
+            final UserService p_userService, final List<RankEntity> p_rankEntities,
+            final ExpiringRankService p_expiringRankService
     ) {
         return new ComponentRenderer<>(userEntity ->
                 new UserDetails(
                         userEntity, p_availableCosmeticRepository, p_availableCosmeticEntities, p_ownedCosmeticService,
-                        p_ownedCosmeticEntities, p_userService, p_rankEntities
+                        p_ownedCosmeticEntities, p_userService, p_rankEntities, p_expiringRankService
                 )
         );
     }
@@ -110,7 +110,8 @@ public class UsersView extends VerticalLayout {
                 final UserEntity p_userEntity,
                 final AvailableCosmeticRepository p_availableCosmeticRepository, final List<AvailableCosmeticEntity> p_availableCosmeticEntities,
                 final OwnedCosmeticService p_ownedCosmeticService, final List<OwnedCosmeticEntity> p_ownedCosmeticEntities,
-                final UserService p_userService, final List<RankEntity> p_rankEntities
+                final UserService p_userService, final List<RankEntity> p_rankEntities,
+                final ExpiringRankService p_expiringRankService
                 ) {
 
             final FlexLayout buttonLayout = new FlexLayout();
@@ -119,7 +120,7 @@ public class UsersView extends VerticalLayout {
             buttonLayout.setJustifyContentMode(JustifyContentMode.CENTER);
 
             // Ranks Selector Layout
-            final FormLayout rankLayout = new FormLayout();
+            final VerticalLayout rankLayout = new VerticalLayout();
 
             final Select<RankEntity> rankSelect = new Select<>();
             rankSelect.setLabel("Rank");
@@ -129,12 +130,22 @@ public class UsersView extends VerticalLayout {
             rankSelect.setItemLabelGenerator(RankEntity::getRankName);
             rankSelect.getStyle().set("padding-top", "0");
 
-            final DatePicker datePicker = new DatePicker();
-            datePicker.setLabel("Expires (Leave blank if none)");
+            final HorizontalLayout horizontalLayout = new HorizontalLayout();
+            horizontalLayout.setWidthFull();
 
-            rankLayout.setColspan(rankLayout, 2);
-            rankLayout.setColspan(datePicker, 1);
-            rankLayout.setResponsiveSteps(new FormLayout.ResponsiveStep("0", 2));
+            final DatePicker datePicker = new DatePicker();
+            datePicker.setLabel("Expires");
+            datePicker.setWidthFull();
+            datePicker.setValue(p_expiringRankService.getExpiration(p_userEntity));
+
+            final Button cancelButton = new Button();
+            cancelButton.setIcon(VaadinIcon.CLOSE.create());
+            cancelButton.getStyle().set("margin-top", "36px");
+            cancelButton.addClickListener(p_buttonClickEvent -> datePicker.setValue(null));
+
+            horizontalLayout.add(datePicker, cancelButton);
+
+            rankLayout.add(rankSelect, horizontalLayout);
             rankLayout.setWidthFull();
 
             // Cosmetics Selector

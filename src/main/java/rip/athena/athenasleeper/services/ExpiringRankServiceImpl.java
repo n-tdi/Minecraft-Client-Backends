@@ -7,6 +7,10 @@ import rip.athena.athenasleeper.entity.RankEntity;
 import rip.athena.athenasleeper.entity.UserEntity;
 import rip.athena.athenasleeper.repository.ExpiringRankRepository;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
+
 @Service
 @AllArgsConstructor
 public class ExpiringRankServiceImpl implements ExpiringRankService {
@@ -36,6 +40,19 @@ public class ExpiringRankServiceImpl implements ExpiringRankService {
         m_expiringRankRepository.deleteById(p_userEntity.getUuid());
 
         return expiringRankEntity;
+    }
+
+    @Override
+    public LocalDate getExpiration(final UserEntity p_userEntity) {
+        final ExpiringRankEntity expiringRankEntity = m_expiringRankRepository.findByUserEntityUuid(p_userEntity.getUuid());
+
+        if (expiringRankEntity == null) {
+            return null;
+        }
+
+        Instant instant = Instant.ofEpochMilli(expiringRankEntity.getTimestampAtExpiration());
+
+        return instant.atOffset(ZoneOffset.UTC).toLocalDate();
     }
 
     @Override

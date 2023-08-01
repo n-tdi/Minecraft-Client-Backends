@@ -4,9 +4,12 @@ import rip.athena.athenasleeper.entity.ExpiringRankEntity;
 import rip.athena.athenasleeper.entity.RankEntity;
 import rip.athena.athenasleeper.entity.UserEntity;
 
+import java.time.LocalDate;
+
 public interface ExpiringRankService {
     boolean rankHasExpired(final UserEntity p_userEntity);
     ExpiringRankEntity findAndRemove(final UserEntity p_userEntity);
+    LocalDate getExpiration(final UserEntity p_userEntity);
 
     /**
      * Add expiration to a user's current rank
