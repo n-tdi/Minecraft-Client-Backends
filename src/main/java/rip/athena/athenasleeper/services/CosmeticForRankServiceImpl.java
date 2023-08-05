@@ -53,7 +53,9 @@ public class CosmeticForRankServiceImpl implements CosmeticForRankService {
 
     @Override
     public void setCosmeticForRank(final RankEntity p_rankEntity, final Set<AvailableCosmeticEntity> p_availableCosmeticEntities) {
-        m_cosmeticForRankRepository.deleteAllByRankEntity(p_rankEntity);
+        if (m_cosmeticForRankRepository.findAllByRankEntity(p_rankEntity).size() > 0) {
+            m_cosmeticForRankRepository.deleteAllByRankEntity(p_rankEntity);
+        }
 
         final List<CosmeticForRankEntity> saveAbleCosmeticsForRank = new ArrayList<>();
 
@@ -64,6 +66,8 @@ public class CosmeticForRankServiceImpl implements CosmeticForRankService {
             saveAbleCosmeticsForRank.add(cosmeticForRankEntity);
         }
 
-        m_cosmeticForRankRepository.saveAll(saveAbleCosmeticsForRank);
+        if (saveAbleCosmeticsForRank.size() > 0) {
+            m_cosmeticForRankRepository.saveAll(saveAbleCosmeticsForRank);
+        }
     }
 }

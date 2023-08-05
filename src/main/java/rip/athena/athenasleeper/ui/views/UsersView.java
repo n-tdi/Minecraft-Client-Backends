@@ -33,6 +33,7 @@ import rip.athena.athenasleeper.services.OwnedCosmeticService;
 import rip.athena.athenasleeper.services.UserService;
 import rip.athena.athenasleeper.ui.MainLayout;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -106,6 +107,7 @@ public class UsersView extends VerticalLayout {
     }
 
     private static class UserDetails extends VerticalLayout {
+        private LocalDate m_timestamp;
         public UserDetails(
                 final UserEntity p_userEntity,
                 final AvailableCosmeticRepository p_availableCosmeticRepository, final List<AvailableCosmeticEntity> p_availableCosmeticEntities,
@@ -136,12 +138,16 @@ public class UsersView extends VerticalLayout {
             final DatePicker datePicker = new DatePicker();
             datePicker.setLabel("Expires");
             datePicker.setWidthFull();
-            datePicker.setValue(p_expiringRankService.getExpiration(p_userEntity));
+            m_timestamp = p_expiringRankService.getExpiration(p_userEntity);
+            datePicker.setValue(m_timestamp);
 
             final Button cancelButton = new Button();
             cancelButton.setIcon(VaadinIcon.CLOSE.create());
             cancelButton.getStyle().set("margin-top", "36px");
-            cancelButton.addClickListener(p_buttonClickEvent -> datePicker.setValue(null));
+            cancelButton.addClickListener(p_buttonClickEvent -> {
+                datePicker.setValue(null);
+                m_timestamp = null;
+            });
 
             horizontalLayout.add(datePicker, cancelButton);
 
