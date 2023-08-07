@@ -4,6 +4,7 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.combobox.MultiSelectComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.grid.Grid;
@@ -13,7 +14,6 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
@@ -124,10 +124,10 @@ public class UsersView extends VerticalLayout {
             // Ranks Selector Layout
             final VerticalLayout rankLayout = new VerticalLayout();
 
-            final Select<RankEntity> rankSelect = new Select<>();
+            final ComboBox<RankEntity> rankSelect = new ComboBox<>();
             rankSelect.setLabel("Rank");
-            rankSelect.setValue(p_userEntity.getRankEntity());
             rankSelect.setItems(p_rankEntities);
+            rankSelect.setValue(p_userEntity.getRankEntity());
             rankSelect.setWidthFull();
             rankSelect.setItemLabelGenerator(RankEntity::getRankName);
             rankSelect.getStyle().set("padding-top", "0");

@@ -1,6 +1,7 @@
 package rip.athena.athenasleeper.ui.views;
 
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
@@ -34,6 +35,7 @@ public class CosmeticsView extends VerticalLayout {
 
         final Grid<AvailableCosmeticEntity> cosmeticEntityGrid = new Grid<>();
         cosmeticEntityGrid.setDataProvider(cosmeticEntityListDataProvider);
+        cosmeticEntityGrid.setHeight(80F, Unit.VH);
 
         cosmeticEntityGrid.addColumn(AvailableCosmeticEntity::getDisplayName).setHeader("Name");
         cosmeticEntityGrid.addColumn(AvailableCosmeticEntity::getCategory).setHeader("Category");

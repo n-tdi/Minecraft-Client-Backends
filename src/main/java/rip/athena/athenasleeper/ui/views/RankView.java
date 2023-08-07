@@ -1,6 +1,7 @@
 package rip.athena.athenasleeper.ui.views;
 
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.MultiSelectComboBox;
@@ -49,6 +50,7 @@ public class RankView extends VerticalLayout {
 
         final Grid<RankEntity> rankEntityGrid = new Grid<>();
         rankEntityGrid.setDataProvider(rankEntityListDataProvider);
+        rankEntityGrid.setHeight(80F, Unit.VH);
 
         rankEntityGrid.addColumn(RankEntity::getRankName).setHeader("Name");
         rankEntityGrid.addComponentColumn(p_rankEntity -> {
